@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel da Portaria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary mb-4 shadow-sm">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">🏢 Sistema de Portaria Inteligente</span>
+    </div>
+</nav>
+
+<div class="container-fluid px-4">
+    <div class="row">
+
+        <!-- ================= SEÇÃO PRESTADORES ================= -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white fw-bold">
+                    🛠️ Prestadores de Serviço no Prédio
+                </div>
+                <div class="card-body">
+                    <!-- Cadastro -->
+                    <form th:action="@{/prestadores/cadastrar}" th:object="${novoPrestador}" method="post" class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <input type="text" th:field="*{nome}" class="form-control form-control-sm" placeholder="Nome do Prestador" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" th:field="*{documento}" class="form-control form-control-sm" placeholder="CPF / RG" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" th:field="*{empresa}" class="form-control form-control-sm" placeholder="Empresa" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" th:field="*{apartamentoDestino}" class="form-control form-control-sm" placeholder="Apto/Bloco" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success btn-sm w-100">Entrada</button>
+                        </div>
+                    </form>
+
+                    <!-- Tabela -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped align-middle mb-0">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Empresa</th>
+                                <th>Apto</th>
+                                <th>Entrada</th>
+                                <th>Ação</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="p : ${prestadores}">
+                                <td th:text="${p.nome}"></td>
+                                <td th:text="${p.empresa}"></td>
+                                <td th:text="${p.apartamentoDestino}"></td>
+                                <td th:text="${#temporals.format(p.dataEntrada, 'HH:mm')}"></td>
+                                <td>
+                                    <form th:action="@{/prestadores/saida/{id}(id=${p.id})}" method="post">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Saída</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(prestadores)}">
+                                <td colspan="5" class="text-center text-muted">Nenhum prestador no prédio.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SEÇÃO ENCOMENDAS ================= -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white fw-bold">
+                    📦 Encomendas Aguardando Retirada
+                </div>
+                <div class="card-body">
+                    <!-- Cadastro -->
+                    <form th:action="@{/encomendas/cadastrar}" th:object="${novaEncomenda}" method="post" class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <input type="text" th:field="*{destinatario}" class="form-control form-control-sm" placeholder="Nome do Morador" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" th:field="*{apartamento}" class="form-control form-control-sm" placeholder="Apto/Bloco" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" th:field="*{empresaEntrega}" class="form-control form-control-sm" placeholder="Transportadora (Ex: Amazon)" required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" th:field="*{codigoRastreio}" class="form-control form-control-sm" placeholder="Rastreio / Pacote">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">Receber</button>
+                        </div>
+                    </form>
+
+                    <!-- Tabela -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped align-middle mb-0">
+                            <thead class="table-secondary">
+                            <tr>
+                                <th>Morador</th>
+                                <th>Apto</th>
+                                <th>Origem</th>
+                                <th>Chegada</th>
+                                <th>Ação</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="e : ${encomendas}">
+                                <td th:text="${e.destinatario}"></td>
+                                <td th:text="${e.apartamento}"></td>
+                                <td th:text="${e.empresaEntrega}"></td>
+                                <td th:text="${#temporals.format(e.dataChegada, 'dd/MM HH:mm')}"></td>
+                                <td>
+                                    <form th:action="@{/encomendas/entregar/{id}(id=${e.id})}" method="post">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">Entregue</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(encomendas)}">
+                                <td colspan="5" class="text-center text-muted">Nenhuma encomenda pendente.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
