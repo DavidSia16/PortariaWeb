@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface PrestadorRepository extends JpaRepository<Prestador, Long> {
     List<Prestador> findByDataSaidaIsNull();
+    List<Prestador> findByNomeContainingIgnoreCase(String nome);
 }

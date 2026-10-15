@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
+@Table (name = "prestadores")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,8 @@ public class Prestador {
 
     private LocalDateTime dataEntrada = LocalDateTime.now();
     private LocalDateTime dataSaida;
+
+
 
 
 }

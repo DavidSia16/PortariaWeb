@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EncomendaRepository extends JpaRepository<Encomenda, Long> {
     List<Encomenda> findByDataEntregaMoradorIsNull();
+    List<Encomenda> findByDestinatarioContainingIgnoreCase(String destinatario);
 }

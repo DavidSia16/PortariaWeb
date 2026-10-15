@@ -23,6 +23,7 @@ public class Encomenda {
     private String codigoRastreio;
     private String empresaEntrega;
 
+    private String status = "AGUARDANDO";
     private LocalDateTime dataChegada = LocalDateTime.now();
     private LocalDateTime dataEntregaMorador;
 
